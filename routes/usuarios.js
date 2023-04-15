@@ -5,7 +5,24 @@ const fs = require('fs');
 usuarios.route('/')
 
     .get((req, res) => {
-        res.json({ mensagem: "GET realizado com sucesso" })
+        const { nome, media } = req.query;
+        const db = lerBancoDados();
+
+        if(nome){
+            const dbAlterado = db.filter(aluno => aluno.nome.toLowerCase().includes(nome.toLowerCase()));
+            res.status(200)(dbAlterado);
+            return;
+        }
+
+        if(media){
+            const dbAlterado = db.filter(aluno => Number(aluno.media) >= Number(media));
+            res.status(200)(dbAlterado);
+            return;
+        }
+
+        res.status(200).json(db);
+
+
     })
     .post((req, res) => {
         const { matricula, nome, media } = req.body;
