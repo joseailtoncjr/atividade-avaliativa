@@ -38,7 +38,34 @@ usuarios.route('/')
     })
 
     .put((req, res) => {
-        res.json({ mensagem: "PUT realizado com sucesso" })
+        const { matricula, nome, media } = req.body;
+
+        if (!matricula || !nome || !media) {
+            res.status(400).json({ mensagem: "Campos obrigatórios não preenchidos." });
+            return;
+        }
+
+        const db = lerBancoDados();
+
+        const alunoEncontrado = db.find(aluno => aluno.matricula === matricula);
+
+        if (!alunoEncontrado) {
+            res.status(404).json({ mensagem: "Aluno inexistente." });
+            return;
+        }
+
+        const dbAlterado = db.filter(aluno => aluno.matricula !== matricula);
+        const alunoModificado = {
+            matricula,
+            nome,
+            media
+        }
+
+        dbAlterado.push(alunoModificado);
+
+        gravarBancoDados(dbAlterado);
+
+        res.status(200).json({ mensagem: "Aluno atualizado com sucesso" })
     })
     .delete((req, res) => {
         const { matricula, nome, media } = req.body;
