@@ -1,0 +1,21 @@
+{
+  "name": "atividade-avaliativa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joseailtoncjr/atividade-avaliativa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joseailtoncjr/atividade-avaliativa/issues"
+  },
+  "homepage": "https://github.com/joseailtoncjr/atividade-avaliativa#readme"
+}
