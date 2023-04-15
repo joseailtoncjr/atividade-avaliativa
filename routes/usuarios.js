@@ -4,47 +4,66 @@ const fs = require('fs');
 
 usuarios.route('/')
 
-.get((req, res) => {
-    res.json({mensagem: "GET realizado com sucesso"})
-})
-.post((req, res) => {
-    const {matricula, nome, media} = req.body;
+    .get((req, res) => {
+        res.json({ mensagem: "GET realizado com sucesso" })
+    })
+    .post((req, res) => {
+        const { matricula, nome, media } = req.body;
 
-    if(!matricula || !nome || !media){
-        res.status(400).json({mensagem: "Campos obrigatórios não preenchidos."});
-        return;
-    }
-    const db = lerBancoDados();
+        if (!matricula || !nome || !media) {
+            res.status(400).json({ mensagem: "Campos obrigatórios não preenchidos." });
+            return;
+        }
+        const db = lerBancoDados();
 
-    const alunoEncontrado = db.find(aluno => aluno.matricula === matricula)
-    console.log(alunoEncontrado);
+        const alunoEncontrado = db.find(aluno => aluno.matricula === matricula)
+        console.log(alunoEncontrado);
 
-    if(alunoEncontrado !== undefined){
-        res.status(400).json({mensagem: "Este aluno já existe."});
-        return;
-    }
+        if (alunoEncontrado !== undefined) {
+            res.status(400).json({ mensagem: "Este aluno já existe." });
+            return;
+        };
 
-    const novoAluno = {
-        matricula,
-        nome,
-        media
-    }
+        const novoAluno = {
+            matricula,
+            nome,
+            media
+        };
 
-    db.push(novoAluno);
+        db.push(novoAluno);
 
-    gravarBancoDados(db);
+        gravarBancoDados(db);
 
-    res.status(200).json({ mensagem: "criado com sucesso" })
-})
+        res.status(200).json({ mensagem: "criado com sucesso" })
+    })
 
-.put((req, res) => {
-    res.json({mensagem: "PUT realizado com sucesso"})
-})
-.delete((req, res) => {
-    res.json({mensagem: "DELETE realizado com sucesso"})
-});
+    .put((req, res) => {
+        res.json({ mensagem: "PUT realizado com sucesso" })
+    })
+    .delete((req, res) => {
+        const { matricula, nome, media } = req.body;
 
-function lerBancoDados(){
+        if (!matricula || !nome || !media) {
+            res.status(400).json({ mensagem: "Campos obrigatórios não preenchidos." });
+            return;
+        }
+
+        const db = lerBancoDados();
+
+        const alunoEncontrado = db.find(aluno => aluno.matricula === matricula);
+
+        if (!alunoEncontrado) {
+            res.status(404).json({ mensagem: "Aluno inexistente." });
+            return;
+        }
+
+        const dbAlterado = db.filter(aluno => aluno.matricula !== matricula);
+        gravarBancoDados(dbAlterado);
+
+        res.status(200).json({ mensagem: "Aluno excluído com sucesso." });
+    });
+
+function lerBancoDados() {
     const arquivo = fs.readFileSync('./db/db.json');
     const db = JSON.parse(arquivo);
     return db;
