@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js" 
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/joseailtoncjr/atividade-avaliativa/issues"
   },
-  "homepage": "https://github.com/joseailtoncjr/atividade-avaliativa#readme"
+  "homepage": "https://github.com/joseailtoncjr/atividade-avaliativa#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
