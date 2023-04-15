@@ -8,8 +8,35 @@ usuarios.route('/')
     res.json({mensagem: "GET realizado com sucesso"})
 })
 .post((req, res) => {
-    res.json({mensagem: "POST realizado com sucesso"})
+    const {matricula, nome, media} = req.body;
+
+    if(!matricula || !nome || !media){
+        res.status(400).json({mensagem: "Campos obrigatórios não preenchidos."});
+        return;
+    }
+    const db = lerBancoDados();
+
+    const alunoEncontrado = db.find(aluno => aluno.matricula === matricula)
+    console.log(alunoEncontrado);
+
+    if(alunoEncontrado !== undefined){
+        res.status(400).json({mensagem: "Este aluno já existe."});
+        return;
+    }
+
+    const novoAluno = {
+        matricula,
+        nome,
+        media
+    }
+
+    db.push(novoAluno);
+
+    gravarBancoDados(db);
+
+    res.status(200).json({ mensagem: "criado com sucesso" })
 })
+
 .put((req, res) => {
     res.json({mensagem: "PUT realizado com sucesso"})
 })
@@ -17,13 +44,13 @@ usuarios.route('/')
     res.json({mensagem: "DELETE realizado com sucesso"})
 });
 
-function lerBancoDados(){ // função que retorna o banco de dados
-    const arquivo = fs.readFileSync('./db/db.json'); // leitura do arquivo
-    const db = JSON.parse(arquivo); // converte para objeto
+function lerBancoDados(){
+    const arquivo = fs.readFileSync('./db/db.json');
+    const db = JSON.parse(arquivo);
     return db;
 }
 
-function gravarBancoDados(db) { // grava o array modificado em formato json no arquivo db.json
+function gravarBancoDados(db) {
     fs.writeFileSync('./db/db.json', JSON.stringify(db));
 }
 
